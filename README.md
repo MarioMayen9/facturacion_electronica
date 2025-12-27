@@ -1,16 +1,56 @@
-# React + Vite
+# Sistema POS - Estructura de Directorios
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto está organizado en 3 directorios principales:
 
-Currently, two official plugins are available:
+##  Estructura del Proyecto
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```
+REPO GITHUB VE FE/
+ front_end/              # Frontend React + Vite
+    src/
+    public/
+    package.json
+    vite.config.js
 
-## React Compiler
+ backend/                 # Backend Spring Boot (Orquestador + Auth)
+    src/
+    pom.xml
+    run-backend.bat
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ svfe-api-firmador/       # Servicio Firmador
+     src/
+     pom.xml
+     start-api.ps1
+```
 
-## Expanding the ESLint configuration
+##  Cómo ejecutar
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Frontend (Puerto 5173/5174)
+```bash
+cd front_end
+npm run dev
+```
+
+### Backend Orquestador (Puerto 8081)
+```bash
+cd backend
+mvn spring-boot:run
+# o ejecutar run-backend.bat
+```
+
+### Servicio Firmador (Puerto 8080)
+```bash
+cd svfe-api-firmador
+./start-api.ps1
+```
+
+##  Credenciales de acceso
+- **Email**: mario.mayen.castro@gmail.com
+- **Password**: admin123
+
+##  Base de datos
+- **PostgreSQL**
+- **Base de datos**: pyme
+- **Usuario**: postgres
+- **Password**: password
+
