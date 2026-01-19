@@ -1,6 +1,14 @@
-# Backend POS - Autenticación con PostgreSQL
+# 🏪 Sistema POS - Backend Spring Boot
 
-Backend Spring Boot para sistema POS con autenticación JWT y PostgreSQL.
+Backend del sistema de punto de venta con facturación electrónica desarrollado en Spring Boot.
+
+## 📋 Características
+
+- **Framework**: Spring Boot 3.2.0
+- **Java**: OpenJDK 17
+- **Base de Datos**: PostgreSQL
+- **Autenticación**: JWT
+- **Dockerizado**: Listo para despliegue en contenedores
 
 ## 🔧 Configuración
 
@@ -14,14 +22,71 @@ Password: password
 
 ### Puerto del backend
 ```
-http://localhost:8081
+Desarrollo: http://localhost:8081
+Producción: http://104.248.215.77:8080
 ```
 
-## 🚀 Ejecutar
+## 🚀 Ejecución
 
+### Desarrollo Local
 ```bash
 cd backend
 mvn spring-boot:run
+```
+
+### Con Docker
+```bash
+# Construir imagen
+docker build -t mcmp2022/pymes:backend-latest .
+
+# Ejecutar contenedor
+docker run -d \
+  --name pos-backend \
+  -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  mcmp2022/pymes:backend-latest
+```
+
+### Con Docker Compose
+```bash
+# Iniciar todos los servicios
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f backend
+```
+
+## 🐳 Despliegue en Producción
+
+### 1. Construcción y Push
+```powershell
+# Ejecutar script automatizado
+.\build-and-push.ps1
+```
+
+### 2. Despliegue en Servidor (104.248.215.77)
+```bash
+# Conectarse al servidor
+ssh root@104.248.215.77
+
+# Descargar y ejecutar imagen
+docker pull mcmp2022/pymes:backend-latest
+docker run -d \
+  --name pos-backend \
+  --restart=unless-stopped \
+  -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC" \
+  mcmp2022/pymes:backend-latest
+```
+
+### 3. Verificación
+```bash
+# Health Check
+curl http://104.248.215.77:8080/actuator/health
+
+# Ver estado del contenedor
+docker ps -f name=pos-backend
 ```
 
 ## 🔐 Endpoints de Autenticación

@@ -1,0 +1,18 @@
+# Dockerfile simple para Spring Boot
+FROM openjdk:17-jdk-alpine
+
+# Instalar Maven
+RUN apk add --no-cache maven
+
+# Copiar proyecto
+WORKDIR /app
+COPY . .
+
+# Compilar y ejecutar
+RUN mvn clean package -DskipTests
+
+# Exponer puerto
+EXPOSE 8080
+
+# Ejecutar aplicación
+CMD ["java", "-jar", "target/*.jar"]

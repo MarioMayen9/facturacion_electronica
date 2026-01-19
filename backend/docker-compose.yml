@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # Backend Spring Boot
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pos-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC
+      - TZ=America/El_Salvador
+      # Variables de base de datos (ajustar según configuración)
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_NAME=pos_db
+      - DB_USERNAME=pos_user
+      - DB_PASSWORD=pos_password
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    networks:
+      - pos-network
+
+  # PostgreSQL Database (opcional para desarrollo local)
+  database:
+    image: postgres:15-alpine
+    container_name: pos-database
+    environment:
+      - POSTGRES_DB=pos_db
+      - POSTGRES_USER=pos_user
+      - POSTGRES_PASSWORD=pos_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - pos-network
+
+volumes:
+  postgres_data:
+
+networks:
+  pos-network:
+    driver: bridge

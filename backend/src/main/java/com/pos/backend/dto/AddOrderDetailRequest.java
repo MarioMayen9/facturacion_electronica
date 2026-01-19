@@ -1,0 +1,54 @@
+package com.pos.backend.dto;
+
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+
+import java.math.BigDecimal;
+
+public class AddOrderDetailRequest {
+
+    @NotNull(message = "Article ID is required")
+    private Integer articleId;
+
+    @NotNull(message = "Quantity is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Quantity must be greater than zero")
+    private BigDecimal quantity;
+
+    @NotNull(message = "Unit price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Unit price must be greater than zero")
+    private BigDecimal unitPrice;
+
+    // Constructors
+    public AddOrderDetailRequest() {}
+
+    public AddOrderDetailRequest(Integer articleId, BigDecimal quantity, BigDecimal unitPrice) {
+        this.articleId = articleId;
+        this.quantity = quantity;
+        this.unitPrice = unitPrice;
+    }
+
+    // Getters and Setters
+    public Integer getArticleId() {
+        return articleId;
+    }
+
+    public void setArticleId(Integer articleId) {
+        this.articleId = articleId;
+    }
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+}

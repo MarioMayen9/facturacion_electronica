@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 public class LoginRequest {
     @NotBlank
     @Email
-    private String correo;
+    private String email;
     
     @NotBlank
     @Size(min = 6)
@@ -17,18 +17,27 @@ public class LoginRequest {
     public LoginRequest() {}
     
     // Constructor con parámetros
-    public LoginRequest(String correo, String password) {
-        this.correo = correo;
+    public LoginRequest(String email, String password) {
+        this.email = email;
         this.password = password;
     }
     
     // Getters y setters
+    public String getEmail() {
+        return email;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    // Compatibility method
     public String getCorreo() {
-        return correo;
+        return email;
     }
     
     public void setCorreo(String correo) {
-        this.correo = correo;
+        this.email = correo;
     }
     
     public String getPassword() {
