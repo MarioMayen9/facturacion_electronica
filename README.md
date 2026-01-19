@@ -1,6 +1,6 @@
 # Sistema POS - Estructura de Directorios
 
-Este proyecto est· organizado en 3 directorios principales:
+Este proyecto est√° organizado en 3 directorios principales:
 
 ##  Estructura del Proyecto
 
@@ -23,7 +23,7 @@ REPO GITHUB VE FE/
      start-api.ps1
 ```
 
-##  CÛmo ejecutar
+##  C√≥mo ejecutar
 
 ### Frontend (Puerto 5173/5174)
 ```bash
@@ -45,12 +45,13 @@ cd svfe-api-firmador
 ```
 
 ##  Credenciales de acceso
-- **Email**: mario.mayen.castro@gmail.com
-- **Password**: admin123
+- **Email**: nuevouser@pos.com
+- **Password**: password123
 
 ##  Base de datos
 - **PostgreSQL**
 - **Base de datos**: pyme
 - **Usuario**: postgres
 - **Password**: password
+
 
