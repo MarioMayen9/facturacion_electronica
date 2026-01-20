@@ -1,0 +1,98 @@
+@startuml
+
+title Sistema POS - Diagrama Entidad Relacion
+
+' Catálogos Principales
+class PURCH_Taxpayer_Classification {
+  + id : INT <<PK>>
+  + name : VARCHAR(100)
+}
+
+class PURCH_Document_Type {
+  + id : INT <<PK>>
+  + name : VARCHAR(100)
+  + code : VARCHAR(10)
+}
+
+class PURCH_Tax {
+  + id : INT <<PK>>
+  + name : VARCHAR(100)
+  + value : DOUBLE(10,4)
+}
+
+class SALE_Client {
+  + id : INT <<PK>>
+  + name : VARCHAR(255)
+  + phone_number : VARCHAR(60)
+  + tax_id : VARCHAR(20)
+  + registration_number : VARCHAR(20)
+  + single_identity_document_number : VARCHAR(20)
+  + taxpayer_classification_id : INT <<FK>>
+}
+
+class INV_Article {
+  + id : INT <<PK>>
+  + sku : VARCHAR(100)
+  + name : VARCHAR(255)
+  + retail_price : DOUBLE(15,4)
+}
+
+' Configuración
+class SALE_Sale_Point {
+  + id : INT <<PK>>
+  + name : VARCHAR(100)
+  + location : VARCHAR(255)
+}
+
+class SALE_Sale_Point_Document_Type {
+  + id : INT <<PK>>
+  + sale_point_id : INT <<FK>>
+  + document_type_id : INT <<FK>>
+  + serial : VARCHAR(50)
+  + latest_number_issued : INT
+}
+
+' Transaccionales
+class SALE_Order {
+  + id : INT <<PK>>
+  + client_id : INT <<FK>>
+  + document_type_id : INT <<FK>>
+  + sale_point_id : INT <<FK>>
+  + emission_date : DATE
+  + issue_generation_code : VARCHAR(100)
+  + subject_amount_sum : DOUBLE(15,2)
+  + collected_tax_amount_sum : DOUBLE(15,2)
+  + sales_total : DOUBLE(15,2)
+  + status : CHAR(1)
+}
+
+class SALE_Order_Detail {
+  + id : INT <<PK>>
+  + order_id : INT <<FK>>
+  + article_id : INT <<FK>>
+  + quantity : DOUBLE(15,4)
+  + price : DOUBLE(15,4)
+  + subject_amount : DOUBLE(15,2)
+}
+
+class SALE_Order_Tax {
+  + id : INT <<PK>>
+  + order_id : INT <<FK>>
+  + tax_id : INT <<FK>>
+  + own_subject_amount_total : DOUBLE(15,2)
+  + own_subject_amount_tax_total : DOUBLE(15,2)
+}
+
+' Relaciones
+SALE_Client --> PURCH_Taxpayer_Classification
+SALE_Sale_Point_Document_Type --> SALE_Sale_Point
+SALE_Sale_Point_Document_Type --> PURCH_Document_Type
+SALE_Order --> SALE_Client
+SALE_Order --> PURCH_Document_Type
+SALE_Order --> SALE_Sale_Point
+SALE_Order_Detail --> SALE_Order
+SALE_Order_Detail --> INV_Article
+SALE_Order_Tax --> SALE_Order
+SALE_Order_Tax --> PURCH_Tax
+
+@enduml

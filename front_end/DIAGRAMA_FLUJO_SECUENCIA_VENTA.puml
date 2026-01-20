@@ -1,0 +1,84 @@
+@startuml
+
+title Flujo de Proceso de Venta - Sistema POS
+
+actor "Vendedor" as V
+participant "Sistema POS" as POS
+participant "API Decima" as API
+participant "Firmador DTE" as FIRM
+participant "Hacienda" as HAC
+
+== Inicio de Venta ==
+V -> POS : Crear Nueva Venta
+hnote over V : Inicia proceso\nde venta
+
+== Selección de Productos ==
+V -> POS : Buscar Producto
+POS -> API : Consultar Productos
+API -> POS : Lista de Productos
+POS -> V : Mostrar Productos
+
+V -> POS : Agregar Producto al Carrito
+hnote over POS : Producto agregado\nal carrito
+
+== Selección de Cliente ==
+V -> POS : Buscar Cliente
+POS -> V : Lista de Clientes
+V -> POS : Seleccionar Cliente
+
+rnote over POS
+ Validar datos tributarios:
+ - NIT, NRC, DUI
+ - Tipo de contribuyente
+endrnote
+
+== Cálculos de Venta ==
+V -> POS : Procesar Pago
+POS -> POS : Calcular Subtotal
+POS -> POS : Calcular IVA (13%)
+POS -> POS : Calcular Total
+
+rnote over POS
+ Cálculo IVA:
+ Subtotal = Total / 1.13
+ IVA = Total - Subtotal
+endrnote
+
+== Confirmación de Venta ==
+V -> POS : Confirmar Venta
+hnote over V : Confirma transacción
+
+== Generación de DTE ==
+POS -> POS : Determinar Tipo Documento
+rnote over POS
+ Tipo de documento:
+ - Crédito Fiscal (contributor)
+ - Consumidor Final
+endrnote
+
+POS -> POS : Generar JSON DTE
+POS -> FIRM : Firmar Documento
+FIRM -> POS : Documento Firmado
+
+== Envío a Hacienda ==
+POS -> HAC : Enviar DTE
+hnote over HAC : Procesando\ndocumento
+
+HAC -> POS : Respuesta Hacienda
+alt Documento Aceptado
+    POS -> V : Mostrar Éxito
+    POS -> POS : Generar Factura Electrónica
+    POS -> V : Enviar Factura al Cliente
+    hnote over V : Venta completada\nexitosamente
+else Documento Rechazado
+    POS -> V : Mostrar Error
+    hnote over V : Revisar y\ncorregir datos
+    V -> POS : Reenviar DTE
+end
+
+== Finalización ==
+POS -> POS : Actualizar Inventario
+POS -> POS : Registrar en Auditoria
+hnote over POS : Venta finalizada\ny registrada
+
+@enduml

@@ -1,0 +1,50 @@
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de desarrollo
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignorar archivos de entorno local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ignorar archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorar archivos temporales
+.tmp/
+temp/
+
+# Ignorar coverage y test reports
+coverage/
+*.lcov
+
+# Ignorar archivos de build local (se construirá en el contenedor)
+dist/
+build/
+
+# Ignorar archivos de caché
+.cache/
+.parcel-cache/
+
+# Ignorar archivos de git
+.git/
+.gitignore
+README.md
+
+# Ignorar configuraciones específicas
+docker-compose*.yml
+Dockerfile
+.dockerignore

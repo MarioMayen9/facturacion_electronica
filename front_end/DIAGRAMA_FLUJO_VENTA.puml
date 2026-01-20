@@ -1,0 +1,72 @@
+@startuml
+
+!define ACTOR_BG #E8F5E8
+!define USECASE_BG #FFF3E0
+!define SYSTEM_BG #E3F2FD
+
+title Sistema POS - Casos de Uso
+scale 1.0
+
+skinparam actor {
+    BackgroundColor ACTOR_BG
+    BorderColor #388E3C
+    FontSize 12
+}
+
+skinparam usecase {
+    BackgroundColor USECASE_BG
+    BorderColor #F57C00
+    FontSize 11
+}
+
+skinparam rectangle {
+    BackgroundColor SYSTEM_BG
+    BorderColor #1976D2
+}
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Cliente" as C
+actor "Vendedor" as V  
+actor "Administrador" as A
+
+rectangle "Sistema POS" {
+    (Buscar Productos) as UC1
+    (Agregar al Carrito) as UC2  
+    (Seleccionar Productos) as UC3
+    (Seleccionar Cliente) as UC12
+    (Calcular Totales + IVA) as UC4
+    (Procesar Pago) as UC5
+    (Generar DTE) as UC6
+    (Firmar Documento) as UC7
+    (Enviar a Hacienda) as UC8
+    (Enviar Factura Electrónica) as UC9
+    (Administrar Catálogos) as UC10
+    (Ver Reportes) as UC11
+
+    
+    C -- UC3
+    V -- UC1
+    V -- UC2
+    V -- UC12
+    V -- UC4
+    V -- UC5
+    V -- UC9
+    A -- UC10
+    A -- UC11
+
+}
+
+actor "Hacienda" as H
+UC8 -- H
+
+' Relaciones de actores con casos de uso
+
+note right of UC6
+  Determina tipo documento:
+  - Credito Fiscal (contributor)
+  - Consumidor Final
+end note
+
+@enduml

@@ -1,0 +1,94 @@
+@startuml DIAGRAMA_FLUJO_SECUENCIA_ADMINISTRADOR_CATALOGOS
+
+participant "Administrador" as admin
+participant "Sistema POS" as pos
+participant "API Decima" as api
+participant "Base de Datos" as db
+
+== Acceso a Administración de Catálogos ==
+
+admin -> pos: Acceder al sistema
+pos -> admin: Mostrar dashboard administrativo
+
+hnote over admin : Administrador selecciona\ngestión de catálogos
+
+admin -> pos: Navegar a "Administrar Catálogos"
+pos -> admin: Mostrar menú de catálogos específicos
+
+== Gestión de Catálogos Específicos ==
+
+admin -> pos: Seleccionar catálogo (Contribuyente/Formas de Pago/Condiciones de Pago/Tipos de Documento)
+pos -> api: GET /catalogos/{tipo}
+api -> db: SELECT * FROM {tabla_catalogo}
+db -> api: Retornar datos del catálogo
+api -> pos: Lista de elementos del catálogo
+pos -> admin: Mostrar tabla con elementos del catálogo
+
+rnote over admin : Catálogos disponibles:\n- Contribuyente\n- Formas de Pago\n- Condiciones de Pago\n- Tipos de Documento
+
+== Crear Nuevo Elemento en Catálogo ==
+
+admin -> pos: Hacer clic en "Nuevo Elemento"
+pos -> admin: Mostrar formulario específico del catálogo
+
+admin -> pos: Completar datos (nombre, código, descripción, estado)
+pos -> pos: Validar datos del formulario
+
+alt Datos válidos
+    pos -> api: POST /catalogos/{tipo}
+    api -> db: INSERT INTO {tabla_catalogo} (nombre, codigo, descripcion, estado, fecha_creacion)
+    db -> api: Confirmación de inserción
+    api -> pos: Elemento creado exitosamente
+    pos -> admin: Mostrar mensaje de éxito
+    pos -> admin: Actualizar lista de elementos
+else Datos inválidos
+    pos -> admin: Mostrar errores de validación
+    hnote over admin : Administrador corrige\nerrores en el formulario
+end
+
+== Editar Elemento Existente ==
+
+admin -> pos: Seleccionar elemento y hacer clic en "Editar"
+pos -> api: GET /catalogos/{tipo}/{id}
+api -> db: SELECT * FROM {tabla_catalogo} WHERE id = {id}
+db -> api: Retornar datos del elemento
+api -> pos: Datos del elemento
+pos -> admin: Mostrar formulario con datos precargados
+
+admin -> pos: Modificar datos del elemento
+pos -> pos: Validar datos modificados
+
+alt Datos válidos
+    pos -> api: PUT /catalogos/{tipo}/{id}
+    api -> db: UPDATE {tabla_catalogo} SET nombre=?, descripcion=?, estado=? WHERE id = {id}
+    db -> api: Confirmación de actualización
+    api -> pos: Elemento actualizado exitosamente
+    pos -> admin: Mostrar mensaje de éxito
+    pos -> admin: Actualizar lista de elementos
+else Datos inválidos
+    pos -> admin: Mostrar errores de validación
+end
+
+== Eliminar Elemento ==
+
+admin -> pos: Seleccionar elemento y hacer clic en "Eliminar"
+pos -> admin: Mostrar confirmación de eliminación
+
+rnote over admin : ¿Está seguro de eliminar\neste elemento del catálogo?
+
+admin -> pos: Confirmar eliminación
+pos -> api: DELETE /catalogos/{tipo}/{id}
+api -> db: DELETE {tabla_catalogo} WHERE id = {id}
+db -> api: Confirmación de eliminación lógica
+api -> pos: Elemento eliminado exitosamente
+pos -> admin: Mostrar mensaje de éxito
+pos -> admin: Actualizar lista de elementos
+
+== Finalización ==
+
+hnote over admin : Administrador completa\ngestión de catálogos específicos
+
+admin -> pos: Cerrar sesión o navegar a otra sección
+pos -> admin: Confirmar acción
+
+@enduml
